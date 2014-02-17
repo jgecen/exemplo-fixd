@@ -44,9 +44,21 @@ public class ClientTest {
 		String returnContent = client.getContent("http://localhost:8080/alo");
 		assertEquals(esperada, returnContent.trim());
 	}
-
+	
 	@Test
 	public void testPostContent() throws Exception {
+		server.handle(Method.POST, "/login",
+				"application/x-www-form-urlencoded")
+				.with(200, "text/plain", "usuario:[request?username] senha:[request?password]");
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("username", "gecen");
+		params.put("password", "123mudar");
+		assertEquals("usuario:gecen senha:123mudar", client.postContent("http://localhost:8080/login", params).trim());
+		
+	}
+
+	@Test
+	public void testPostUtilizandoAsyncHttpClient() throws Exception {
 		server.handle(Method.POST, "/greeting",
 				"application/x-www-form-urlencoded")
 				.with(200, "text/plain", "Hello [request?name]");
@@ -59,7 +71,7 @@ public class ClientTest {
 		assertEquals("Hello Tim", resp.getResponseBody().trim());
 	}
 	@Test
-	public void testPostContent2() throws Exception {
+	public void testPostContentUtilizandoApiHttpComponents() throws Exception {
 		server.handle(Method.POST, "/greeting",
 				"application/x-www-form-urlencoded")
 				.with(200, "text/plain", "Hello [request?name]");
@@ -79,17 +91,6 @@ public class ClientTest {
 		} finally {
 		    response.close();
 		}		
-		
-	}
-	@Test
-	public void testPostContent3() throws Exception {
-		server.handle(Method.POST, "/login",
-				"application/x-www-form-urlencoded")
-				.with(200, "text/plain", "usuario:[request?username] senha:[request?password]");
-		Map<String, String> params = new HashMap<String, String>();
-		params.put("username", "gecen");
-		params.put("password", "123mudar");
-		assertEquals("usuario:gecen senha:123mudar", client.postContent("http://localhost:8080/login", params).trim());
 		
 	}
 
