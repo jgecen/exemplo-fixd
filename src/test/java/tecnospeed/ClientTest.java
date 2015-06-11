@@ -26,6 +26,9 @@ import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.Response;
 
 public class ClientTest {
+	
+	
+	private String somenteParaTeste;
 
 	private ServerFixture server;
 	private Client client;
